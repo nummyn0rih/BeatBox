@@ -109,7 +109,7 @@ public class BeatBox {
             int key = instruments[i];
 
             for (int j=0; j<16; j++) {
-                JCheckBox jc = (JCheckBox) checkboxList.get(j + (16*i));
+                JCheckBox jc = checkboxList.get(j + (16*i));
                 if (jc.isSelected()) {
                     trackList[j] = key;
                 } else {
