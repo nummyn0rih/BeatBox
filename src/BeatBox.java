@@ -27,7 +27,7 @@ public class BeatBox {
         theFrame = new JFrame("Cyber BeatBox");
         theFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         BorderLayout layout = new BorderLayout();
-        JPanel background =  new JPanel(layout);
+        JPanel background = new JPanel(layout);
         background.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         checkboxList = new ArrayList<JCheckBox>();
@@ -50,11 +50,11 @@ public class BeatBox {
         buttonBox.add(downTempo);
 
         JButton save = new JButton("Save");
-        save.addActionListener(new MySendListener());
+        save.addActionListener(new SaveMenuListener());
         buttonBox.add(save);
 
         JButton load = new JButton("Load");
-        load.addActionListener(new MyReadInListener());
+        load.addActionListener(new LoadMenuListener());
         buttonBox.add(load);
 
         Box nameBox = new Box(BoxLayout.Y_AXIS);
@@ -67,13 +67,13 @@ public class BeatBox {
 
         theFrame.getContentPane().add(background);
 
-        GridLayout grid = new GridLayout(16,16);
+        GridLayout grid = new GridLayout(16, 16);
         grid.setVgap(1);
         grid.setHgap(2);
         mainPanel = new JPanel(grid);
         background.add(BorderLayout.CENTER, mainPanel);
 
-        for (int i=0; i<256; i++) {
+        for (int i = 0; i < 256; i++) {
             JCheckBox c = new JCheckBox();
             c.setSelected(false);
             checkboxList.add(c);
@@ -91,10 +91,12 @@ public class BeatBox {
         try {
             sequencer = MidiSystem.getSequencer();
             sequencer.open();
-            sequence = new Sequence(Sequence.PPQ,4);
+            sequence = new Sequence(Sequence.PPQ, 4);
             track = sequence.createTrack();
             sequencer.setTempoInBPM(120);
-        } catch (Exception e) {e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void buildTrackAndStart() {
@@ -103,13 +105,13 @@ public class BeatBox {
         sequence.deleteTrack(track);
         track = sequence.createTrack();
 
-        for (int i=0; i<16; i++) {
+        for (int i = 0; i < 16; i++) {
             trackList = new int[16];
 
             int key = instruments[i];
 
-            for (int j=0; j<16; j++) {
-                JCheckBox jc = checkboxList.get(j + (16*i));
+            for (int j = 0; j < 16; j++) {
+                JCheckBox jc = checkboxList.get(j + (16 * i));
                 if (jc.isSelected()) {
                     trackList[j] = key;
                 } else {
@@ -127,7 +129,9 @@ public class BeatBox {
             sequencer.setLoopCount(sequencer.LOOP_CONTINUOUSLY);
             sequencer.start();
             sequencer.setTempoInBPM(120);
-        } catch (Exception e) {e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public class MyStartListener implements ActionListener {
@@ -145,24 +149,24 @@ public class BeatBox {
     public class MyUpTempoListener implements ActionListener {
         public void actionPerformed(ActionEvent a) {
             float tempoFactor = sequencer.getTempoFactor();
-            sequencer.setTempoFactor((float)(tempoFactor * 1.03));
+            sequencer.setTempoFactor((float) (tempoFactor * 1.03));
         }
     }
 
     public class MyDownTempoListener implements ActionListener {
         public void actionPerformed(ActionEvent a) {
             float tempoFactor = sequencer.getTempoFactor();
-            sequencer.setTempoFactor((float)(tempoFactor * .97));
+            sequencer.setTempoFactor((float) (tempoFactor * .97));
         }
     }
 
     public void makeTracks(int[] list) {
-        for (int i=0; i<16; i++) {
+        for (int i = 0; i < 16; i++) {
             int key = list[i];
 
             if (key != 0) {
                 track.add(makeEvent(144, 9, key, 100, i));
-                track.add(makeEvent(128, 9, key, 100, i+1));
+                track.add(makeEvent(128, 9, key, 100, i + 1));
             }
         }
     }
@@ -173,7 +177,9 @@ public class BeatBox {
             ShortMessage a = new ShortMessage();
             a.setMessage(comd, chan, one, two);
             event = new MidiEvent(a, tick);
-        } catch (Exception e) {e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return event;
     }
 }
